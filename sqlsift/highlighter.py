@@ -60,3 +60,21 @@ def columns_changed_in_result(result: DiffResult) -> Dict[str, int]:
         for col in changed_columns(diff):
             counts[col] = counts.get(col, 0) + 1
     return counts
+
+
+def most_changed_columns(result: DiffResult, top_n: int = 5) -> List[str]:
+    """Return the *top_n* column names most frequently changed across all diffs.
+
+    Columns are ranked by how many rows they appear as changed in, descending.
+    Useful for quickly surfacing which fields are most volatile between two
+    versions of a dataset.
+
+    Args:
+        result: The diff result to analyse.
+        top_n:  Maximum number of column names to return.  Defaults to 5.
+
+    Returns:
+        A list of column names sorted by change frequency, highest first.
+    """
+    counts = columns_changed_in_result(result)
+    return sorted(counts, key=lambda col: counts[col], reverse=True)[:top_n]
