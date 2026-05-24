@@ -40,11 +40,15 @@ class ValidationReport:
         }
 
 
+def _collect_all_diffs(result: DiffResult) -> List[RowDiff]:
+    """Return a flat list of all RowDiff entries across added, removed, and modified."""
+    return result.added + result.removed + result.modified
+
+
 def validate_keys(result: DiffResult, keys: Sequence[str]) -> ValidationReport:
     """Check that every diff row contains all required key columns."""
     report = ValidationReport()
-    all_diffs: List[RowDiff] = result.added + result.removed + result.modified
-    for idx, diff in enumerate(all_diffs):
+    for idx, diff in enumerate(_collect_all_diffs(result)):
         row = diff.left or diff.right or {}
         for key in keys:
             if key not in row:
@@ -62,8 +66,7 @@ def validate_columns(result: DiffResult, expected_columns: Sequence[str]) -> Val
     """Check that diff rows do not contain columns outside *expected_columns*."""
     report = ValidationReport()
     expected = set(expected_columns)
-    all_diffs: List[RowDiff] = result.added + result.removed + result.modified
-    for idx, diff in enumerate(all_diffs):
+    for idx, diff in enumerate(_collect_all_diffs(result)):
         row = diff.left or diff.right or {}
         for col in row:
             if col not in expected:
@@ -80,15 +83,14 @@ def validate_columns(result: DiffResult, expected_columns: Sequence[str]) -> Val
 def validate_no_null_keys(result: DiffResult, keys: Sequence[str]) -> ValidationReport:
     """Check that key columns are never None/empty in any diff row."""
     report = ValidationReport()
-    all_diffs: List[RowDiff] = result.added + result.removed + result.modified
-    for idx, diff in enumerate(all_diffs):
+    for idx, diff in enumerate(_collect_all_diffs(result)):
         row = diff.left or diff.right or {}
         for key in keys:
-            if row.get(key) is None:
+            if row.get(key) is None or row.get(key) == "":
                 report.issues.append(
                     ValidationIssue(
                         kind="null_key",
-                        message=f"Key column {key!r} is NULL at row index {idx}",
+                        message=f"Key column {key!r} is null or empty at row index {idx}",
                         row_index=idx,
                     )
                 )
