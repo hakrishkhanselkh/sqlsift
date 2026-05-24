@@ -1,62 +1,75 @@
 """sqlsift — diff query result sets and surface row-level discrepancies."""
 
-from sqlsift.diff import DiffResult, RowDiff, diff
-from sqlsift.loader import from_dicts, from_csv, from_json, from_tuples
-from sqlsift.reporter import format_text, format_csv, format_json, print_report
-from sqlsift.filter import by_kind, by_columns, by_predicate
-from sqlsift.summarizer import DiffSummary, summarize
-from sqlsift.sorter import by_key, by_column, by_kind as sort_by_kind
-from sqlsift.patcher import generate_patch
-from sqlsift.exporter import (
+from .diff import DiffResult, RowDiff, diff  # noqa: F401
+from .loader import from_dicts, from_csv, from_json, from_tuples  # noqa: F401
+from .reporter import format_text, format_csv, format_json, print_report  # noqa: F401
+from .filter import by_kind, by_columns as filter_by_columns, by_predicate  # noqa: F401
+from .summarizer import DiffSummary, summarize  # noqa: F401
+from .sorter import by_key, by_column as sort_by_column, by_kind as sort_by_kind  # noqa: F401
+from .patcher import generate_patch  # noqa: F401
+from .exporter import (
     to_text_file,
     to_csv_file,
     to_json_file,
     to_dict_list,
     to_csv_string,
-)
-from sqlsift.validator import ValidationReport, validate
-from sqlsift.sampler import head, tail, random_sample, stratified_sample
+)  # noqa: F401
+from .validator import ValidationIssue, ValidationReport, validate  # noqa: F401
+from .sampler import head, tail, random_sample, stratified_sample  # noqa: F401
+from .grouper import (
+    by_column as group_by_column,
+    by_columns as group_by_columns,
+    counts_by_column,
+)  # noqa: F401
 
+__version__ = "0.1.0"
 __all__ = [
     # core
     "DiffResult",
     "RowDiff",
     "diff",
-    # loading
+    # loaders
     "from_dicts",
     "from_csv",
     "from_json",
     "from_tuples",
-    # reporting
+    # reporter
     "format_text",
     "format_csv",
     "format_json",
     "print_report",
-    # filtering
+    # filter
     "by_kind",
-    "by_columns",
+    "filter_by_columns",
     "by_predicate",
-    # summarising
+    # summarizer
     "DiffSummary",
     "summarize",
-    # sorting
+    # sorter
     "by_key",
-    "by_column",
+    "sort_by_column",
     "sort_by_kind",
-    # patching
+    # patcher
     "generate_patch",
-    # exporting
+    # exporter
     "to_text_file",
     "to_csv_file",
     "to_json_file",
     "to_dict_list",
     "to_csv_string",
-    # validation
+    # validator
+    "ValidationIssue",
     "ValidationReport",
     "validate",
-    # sampling
+    # sampler
     "head",
     "tail",
     "random_sample",
     "stratified_sample",
+    # grouper
+    "group_by_column",
+    "group_by_columns",
+    "counts_by_column",
+    # meta
+    "__version__",
 ]
