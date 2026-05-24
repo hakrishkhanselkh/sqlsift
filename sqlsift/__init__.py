@@ -1,58 +1,58 @@
-"""sqlsift – diff query result sets and surface row-level discrepancies."""
+"""sqlsift — diff query result sets and surface row-level discrepancies."""
+
 from sqlsift.diff import DiffResult, RowDiff, diff  # noqa: F401
-from sqlsift.loader import from_csv, from_dicts, from_json, from_tuples  # noqa: F401
-from sqlsift.reporter import format_csv, format_json, format_text, print_report  # noqa: F401
-from sqlsift.filter import by_columns, by_kind, by_predicate  # noqa: F401
-from sqlsift.summarizer import DiffSummary, summarize  # noqa: F401
-from sqlsift.sorter import by_column  # noqa: F401
+from sqlsift.loader import from_dicts, from_csv, from_json, from_tuples  # noqa: F401
+from sqlsift.reporter import format_text, format_csv, format_json, print_report  # noqa: F401
+from sqlsift.filter import by_kind, by_columns, by_predicate  # noqa: F401
+from sqlsift.summarizer import summarize, DiffSummary, ColumnStats  # noqa: F401
+from sqlsift.sorter import by_key, by_column, by_kind as sort_by_kind  # noqa: F401
 from sqlsift.patcher import generate_patch  # noqa: F401
-from sqlsift.exporter import (
-    to_csv_file,
-    to_csv_string,
-    to_dict_list,
-    to_json_file,
+from sqlsift.exporter import (  # noqa: F401
     to_text_file,
-)  # noqa: F401
-from sqlsift.validator import ValidationIssue, ValidationReport, validate  # noqa: F401
-from sqlsift.sampler import head, random_sample, stratified_sample, tail  # noqa: F401
-from sqlsift.grouper import by_column as group_by_column  # noqa: F401
-from sqlsift.grouper import by_columns as group_by_columns  # noqa: F401
-from sqlsift.grouper import counts_by_column  # noqa: F401
-from sqlsift.pivot import by_column as pivot_by_column  # noqa: F401
-from sqlsift.pivot import change_frequency, most_changed_columns  # noqa: F401
-from sqlsift.scorer import DiffScore, score  # noqa: F401
-from sqlsift.merger import conflicts, merge  # noqa: F401
-from sqlsift.highlighter import (  # noqa: F401
-    changed_columns,
-    columns_changed_in_result,
-    highlight_result,
-    highlight_row,
+    to_csv_file,
+    to_json_file,
+    to_dict_list,
+    to_csv_string,
 )
+from sqlsift.validator import validate, ValidationReport, ValidationIssue  # noqa: F401
+from sqlsift.sampler import head, tail, random_sample, stratified_sample  # noqa: F401
+from sqlsift.grouper import by_column as group_by_column  # noqa: F401
+from sqlsift.pivot import by_column as pivot_by_column, change_frequency, most_changed_columns  # noqa: F401
+from sqlsift.scorer import score, DiffScore  # noqa: F401
+from sqlsift.merger import merge, conflicts  # noqa: F401
+from sqlsift.highlighter import highlight_result, changed_columns  # noqa: F401
+from sqlsift.annotator import annotate_result, annotate_row  # noqa: F401
+from sqlsift.segmenter import by_column_value, by_predicate as segment_by_predicate, sizes  # noqa: F401
+from sqlsift.ranker import by_column as rank_by_column, by_score as rank_by_score, top_n  # noqa: F401
+from sqlsift.timeline import Timeline, Snapshot  # noqa: F401
 
 __all__ = [
     # core
-    "diff",
     "DiffResult",
     "RowDiff",
-    # loaders
+    "diff",
+    # loader
     "from_dicts",
     "from_csv",
     "from_json",
     "from_tuples",
-    # reporters
+    # reporter
     "format_text",
     "format_csv",
     "format_json",
     "print_report",
-    # filters
+    # filter
     "by_kind",
     "by_columns",
     "by_predicate",
     # summarizer
-    "DiffSummary",
     "summarize",
+    "DiffSummary",
+    "ColumnStats",
     # sorter
+    "by_key",
     "by_column",
+    "sort_by_kind",
     # patcher
     "generate_patch",
     # exporter
@@ -62,9 +62,9 @@ __all__ = [
     "to_dict_list",
     "to_csv_string",
     # validator
-    "ValidationIssue",
-    "ValidationReport",
     "validate",
+    "ValidationReport",
+    "ValidationIssue",
     # sampler
     "head",
     "tail",
@@ -72,21 +72,31 @@ __all__ = [
     "stratified_sample",
     # grouper
     "group_by_column",
-    "group_by_columns",
-    "counts_by_column",
     # pivot
     "pivot_by_column",
     "change_frequency",
     "most_changed_columns",
     # scorer
-    "DiffScore",
     "score",
+    "DiffScore",
     # merger
     "merge",
     "conflicts",
     # highlighter
-    "changed_columns",
-    "highlight_row",
     "highlight_result",
-    "columns_changed_in_result",
+    "changed_columns",
+    # annotator
+    "annotate_result",
+    "annotate_row",
+    # segmenter
+    "by_column_value",
+    "segment_by_predicate",
+    "sizes",
+    # ranker
+    "rank_by_column",
+    "rank_by_score",
+    "top_n",
+    # timeline
+    "Timeline",
+    "Snapshot",
 ]
