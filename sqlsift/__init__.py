@@ -1,54 +1,58 @@
-"""sqlsift — diff query result sets and surface row-level discrepancies."""
-
-from .diff import DiffResult, RowDiff, diff  # noqa: F401
-from .loader import from_dicts, from_csv, from_json, from_tuples  # noqa: F401
-from .reporter import format_text, format_csv, format_json, print_report  # noqa: F401
-from .filter import by_kind, by_columns as filter_by_columns, by_predicate  # noqa: F401
-from .summarizer import DiffSummary, summarize  # noqa: F401
-from .sorter import by_key, by_column as sort_by_column, by_kind as sort_by_kind  # noqa: F401
-from .patcher import generate_patch  # noqa: F401
-from .exporter import (
-    to_text_file,
+"""sqlsift – diff query result sets and surface row-level discrepancies."""
+from sqlsift.diff import DiffResult, RowDiff, diff  # noqa: F401
+from sqlsift.loader import from_csv, from_dicts, from_json, from_tuples  # noqa: F401
+from sqlsift.reporter import format_csv, format_json, format_text, print_report  # noqa: F401
+from sqlsift.filter import by_columns, by_kind, by_predicate  # noqa: F401
+from sqlsift.summarizer import DiffSummary, summarize  # noqa: F401
+from sqlsift.sorter import by_column  # noqa: F401
+from sqlsift.patcher import generate_patch  # noqa: F401
+from sqlsift.exporter import (
     to_csv_file,
-    to_json_file,
-    to_dict_list,
     to_csv_string,
+    to_dict_list,
+    to_json_file,
+    to_text_file,
 )  # noqa: F401
-from .validator import ValidationIssue, ValidationReport, validate  # noqa: F401
-from .sampler import head, tail, random_sample, stratified_sample  # noqa: F401
-from .grouper import (
-    by_column as group_by_column,
-    by_columns as group_by_columns,
-    counts_by_column,
-)  # noqa: F401
+from sqlsift.validator import ValidationIssue, ValidationReport, validate  # noqa: F401
+from sqlsift.sampler import head, random_sample, stratified_sample, tail  # noqa: F401
+from sqlsift.grouper import by_column as group_by_column  # noqa: F401
+from sqlsift.grouper import by_columns as group_by_columns  # noqa: F401
+from sqlsift.grouper import counts_by_column  # noqa: F401
+from sqlsift.pivot import by_column as pivot_by_column  # noqa: F401
+from sqlsift.pivot import change_frequency, most_changed_columns  # noqa: F401
+from sqlsift.scorer import DiffScore, score  # noqa: F401
+from sqlsift.merger import conflicts, merge  # noqa: F401
+from sqlsift.highlighter import (  # noqa: F401
+    changed_columns,
+    columns_changed_in_result,
+    highlight_result,
+    highlight_row,
+)
 
-__version__ = "0.1.0"
 __all__ = [
     # core
+    "diff",
     "DiffResult",
     "RowDiff",
-    "diff",
     # loaders
     "from_dicts",
     "from_csv",
     "from_json",
     "from_tuples",
-    # reporter
+    # reporters
     "format_text",
     "format_csv",
     "format_json",
     "print_report",
-    # filter
+    # filters
     "by_kind",
-    "filter_by_columns",
+    "by_columns",
     "by_predicate",
     # summarizer
     "DiffSummary",
     "summarize",
     # sorter
-    "by_key",
-    "sort_by_column",
-    "sort_by_kind",
+    "by_column",
     # patcher
     "generate_patch",
     # exporter
@@ -70,6 +74,19 @@ __all__ = [
     "group_by_column",
     "group_by_columns",
     "counts_by_column",
-    # meta
-    "__version__",
+    # pivot
+    "pivot_by_column",
+    "change_frequency",
+    "most_changed_columns",
+    # scorer
+    "DiffScore",
+    "score",
+    # merger
+    "merge",
+    "conflicts",
+    # highlighter
+    "changed_columns",
+    "highlight_row",
+    "highlight_result",
+    "columns_changed_in_result",
 ]
