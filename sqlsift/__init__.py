@@ -1,29 +1,55 @@
 """sqlsift — diff query result sets and surface row-level discrepancies."""
 
-from sqlsift.diff import diff, DiffResult, RowDiff
-from sqlsift.loader import from_dicts, from_csv, from_json, from_tuples
-from sqlsift.reporter import format_text, format_csv, format_json, print_report
-from sqlsift.filter import by_kind, by_columns, by_predicate
+from sqlsift.diff import DiffResult, RowDiff, diff
+from sqlsift.exporter import (
+    to_csv_file,
+    to_csv_string,
+    to_dict_list,
+    to_json_file,
+    to_json_string,
+    to_text_file,
+)
+from sqlsift.filter import by_columns, by_kind, by_predicate
+from sqlsift.loader import from_csv, from_dicts, from_json, from_tuples
+from sqlsift.patcher import generate_patch
+from sqlsift.reporter import format_csv, format_json, format_text, print_report
+from sqlsift.sorter import by_column, by_key
+from sqlsift.sorter import by_kind as sort_by_kind
+from sqlsift.summarizer import DiffSummary, summarize
 
 __all__ = [
-    # core diff
+    # core
     "diff",
     "DiffResult",
     "RowDiff",
-    # loaders
+    # loader
     "from_dicts",
     "from_csv",
     "from_json",
     "from_tuples",
-    # reporters
+    # filter
+    "by_kind",
+    "by_columns",
+    "by_predicate",
+    # sorter
+    "by_key",
+    "by_column",
+    "sort_by_kind",
+    # summarizer
+    "DiffSummary",
+    "summarize",
+    # reporter
     "format_text",
     "format_csv",
     "format_json",
     "print_report",
-    # filters
-    "by_kind",
-    "by_columns",
-    "by_predicate",
+    # exporter
+    "to_text_file",
+    "to_csv_file",
+    "to_json_file",
+    "to_csv_string",
+    "to_json_string",
+    "to_dict_list",
+    # patcher
+    "generate_patch",
 ]
-
-__version__ = "0.1.0"
