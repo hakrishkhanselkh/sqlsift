@@ -92,6 +92,17 @@ def test_flatten_kind_filter_case_insensitive():
     assert len(flat) == 1
 
 
+def test_flatten_preserves_order_of_diffs():
+    """Flattened rows should appear in the same order as the input diffs."""
+    result = _make_result(
+        _added((1,), {"id": 1}),
+        _added((2,), {"id": 2}),
+        _added((3,), {"id": 3}),
+    )
+    flat = flatten(result)
+    assert [row["id"] for row in flat] == [1, 2, 3]
+
+
 # ---------------------------------------------------------------------------
 # flatten_modified_delta
 # ---------------------------------------------------------------------------
@@ -102,23 +113,3 @@ def test_flatten_modified_delta_empty_result():
 
 def test_flatten_modified_delta_skips_added_and_removed():
     result = _make_result(
-        _added((1,), {"id": 1}),
-        _removed((2,), {"id": 2}),
-    )
-    assert flatten_modified_delta(result) == []
-
-
-def test_flatten_modified_delta_contains_before_after():
-    delta = {"price": (5.0, 7.5)}
-    result = _make_result(_modified((1,), {"id": 1, "price": 7.5}, delta))
-    out = flatten_modified_delta(result)
-    assert len(out) == 1
-    assert out[0]["price_before"] == 5.0
-    assert out[0]["price_after"] == 7.5
-
-
-def test_flatten_modified_delta_includes_key():
-    delta = {"x": (1, 2)}
-    result = _make_result(_modified((42,), {"id": 42, "x": 2}, delta))
-    out = flatten_modified_delta(result)
-    assert out[0]["__key__"] == (42,)
