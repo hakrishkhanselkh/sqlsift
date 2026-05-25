@@ -71,3 +71,22 @@ def rule_by_predicate(predicate: Callable[[RowDiff], bool], label: str) -> Label
         return label if predicate(row) else None
 
     return _rule
+
+
+def rule_by_changed_column(column: str, label: str) -> LabelRule:
+    """Return a rule that assigns *label* when *column* is among the changed columns.
+
+    This rule only applies to rows with kind ``'modified'``. It checks whether
+    *column* appears in ``row.changed_columns``, making it easy to flag rows
+    where a specific field was updated.
+    """
+
+    def _rule(row: RowDiff) -> Optional[str]:
+        if row.kind != "modified":
+            return None
+        changed = getattr(row, "changed_columns", None)
+        if changed is None:
+            return None
+        return label if column in changed else None
+
+    return _rule
