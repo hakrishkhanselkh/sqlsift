@@ -109,24 +109,24 @@ def test_by_row_modified_with_same_delta_deduped():
 
 def test_duplicates_empty_result():
     result = _make_result()
-    assert duplicates(result, ["id"]).diffs == []
+    assert duplicates(result).diffs == []
 
 
-def test_duplicates_returns_only_extras():
+def test_duplicates_returns_only_duplicate_diffs():
     r = _make_result(
         _added({"id": 1, "val": "a"}),
-        _added({"id": 1, "val": "b"}),
-        _added({"id": 1, "val": "c"}),
+        _added({"id": 1, "val": "a"}),  # duplicate
+        _added({"id": 2, "val": "b"}),
     )
-    dupes = duplicates(r, ["id"])
-    assert len(dupes.diffs) == 2
-    vals = [d.row["val"] for d in dupes.diffs]
-    assert "b" in vals and "c" in vals
+    dupes = duplicates(r)
+    assert len(dupes.diffs) == 1
+    assert dupes.diffs[0].row == {"id": 1, "val": "a"}
 
 
-def test_duplicates_no_dupes_returns_empty():
+def test_duplicates_no_duplicates_returns_empty():
     r = _make_result(
-        _added({"id": 1}),
-        _added({"id": 2}),
+        _added({"id": 1, "val": "a"}),
+        _added({"id": 2, "val": "b"}),
     )
-    assert duplicates(r, ["id"]).diffs == []
+    dupes = duplicates(r)
+    assert dupes.diffs == []
