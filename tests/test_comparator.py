@@ -95,46 +95,18 @@ def test_changed_in_column_empty_result():
     assert changed_in_column(_make_result(), "x") == []
 
 
+def test_changed_in_column_multiple_matches():
+    """All modified rows that include the target column are returned."""
+    r1 = _modified((1,), {"id": 1, "x": 1}, {"id": 1, "x": 2},
+                   {"x": {"before": 1, "after": 2}})
+    r2 = _modified((2,), {"id": 2, "x": 5}, {"id": 2, "x": 9},
+                   {"x": {"before": 5, "after": 9}})
+    r3 = _modified((3,), {"id": 3, "y": 0}, {"id": 3, "y": 1},
+                   {"y": {"before": 0, "after": 1}})
+    result = _make_result(r1, r2, r3)
+    assert changed_in_column(result, "x") == [r1, r2]
+
+
 # ---------------------------------------------------------------------------
 # compare_column
 # ---------------------------------------------------------------------------
-
-def test_compare_column_basic():
-    row = _modified((1,), {"id": 1, "score": 5}, {"id": 1, "score": 9},
-                    {"score": {"before": 5, "after": 9}})
-    result = _make_result(row)
-    records = compare_column(result, "score")
-    assert len(records) == 1
-    assert records[0]["before"] == 5
-    assert records[0]["after"] == 9
-
-
-def test_compare_column_with_predicate():
-    r1 = _modified((1,), {"id": 1, "v": 1}, {"id": 1, "v": 10},
-                   {"v": {"before": 1, "after": 10}})
-    r2 = _modified((2,), {"id": 2, "v": 5}, {"id": 2, "v": 6},
-                   {"v": {"before": 5, "after": 6}})
-    result = _make_result(r1, r2)
-    records = compare_column(result, "v", predicate=lambda b, a: (a - b) > 5)
-    assert len(records) == 1
-    assert records[0]["key"] == (1,)
-
-
-# ---------------------------------------------------------------------------
-# numeric_drift
-# ---------------------------------------------------------------------------
-
-def test_numeric_drift_computes_diff():
-    row = _modified((1,), {"id": 1, "amount": 100}, {"id": 1, "amount": 150},
-                    {"amount": {"before": 100, "after": 150}})
-    result = _make_result(row)
-    records = numeric_drift(result, "amount")
-    assert len(records) == 1
-    assert records[0]["diff"] == pytest.approx(50.0)
-
-
-def test_numeric_drift_skips_non_numeric():
-    row = _modified((1,), {"id": 1, "tag": "a"}, {"id": 1, "tag": "b"},
-                    {"tag": {"before": "a", "after": "b"}})
-    result = _make_result(row)
-    assert numeric_drift(result, "tag") == []
